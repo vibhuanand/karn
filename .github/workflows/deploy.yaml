@@ -1,0 +1,62 @@
+name: Deploy Resource Group to Azure
+
+on:
+  push:
+    branches:
+      - '**' # Trigger on any push
+  pull_request:
+    branches:
+      - '**' # Trigger on any pull request
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to (sand/prod)'
+        required: true
+        default: 'sand'
+        type: choice
+        options:
+          - sand
+          - prod
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.branch }}
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.7
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Set environment variable for automatic runs
+      if: github.event_name != 'workflow_dispatch'
+      run: echo "ENVIRONMENT=sand" >> $GITHUB_ENV
+
+    - name: Set environment variable for manual runs
+      if: github.event_name == 'workflow_dispatch'
+      run: echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Plan
+      run: terraform plan -var "resource_group_name=karn-rg-${{ env.ENVIRONMENT }}" -var "location=Central India"
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve -var "resource_group_name=karn-rg-${{ env.ENVIRONMENT }}" -var "location=Central India"
