@@ -57,11 +57,17 @@ jobs:
       if: github.event_name == 'workflow_dispatch'
       run: echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
 
+    - name: Change directory to 'tf'
+      run: cd tf
+
     - name: Terraform Init
       run: terraform init
+      working-directory: ./tf
 
     - name: Terraform Plan
       run: terraform plan -var "resource_group_name=karn-rg-${{ env.ENVIRONMENT }}" -var "location=Central India"
+      working-directory: ./tf
 
     - name: Terraform Apply
       run: terraform apply -auto-approve -var "resource_group_name=karn-rg-${{ env.ENVIRONMENT }}" -var "location=Central India"
+      working-directory: ./tf
