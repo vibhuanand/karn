@@ -65,6 +65,6 @@ resource "azurerm_resource_group" "rg" {
 #   key_vault_id = azurerm_key_vault.kv.id
 # }
 
-output "webapp_url" {
-  value = azurerm_app_service.app.default_site_hostname
-}
+# output "webapp_url" {
+#   value = azurerm_app_service.app.default_site_hostname
+# }
