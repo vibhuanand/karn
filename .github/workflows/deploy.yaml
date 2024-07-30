@@ -57,9 +57,6 @@ jobs:
       if: github.event_name == 'workflow_dispatch'
       run: echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
 
-    - name: Change directory to 'tf'
-      run: cd tf
-
     - name: Terraform Init
       run: terraform init
       working-directory: ./tf
