@@ -65,7 +65,7 @@ jobs:
       run: terraform init
 
     - name: Terraform Plan
-      run: terraform plan -var "resource_group_name=karn-rg-${{ env.ENVIRONMENT }}" -var "location=Central India"
-
+      run: terraform plan 
+      
     - name: Terraform Apply
-      run: terraform apply -auto-approve -var "resource_group_name=karn-rg-${{ env.ENVIRONMENT }}" -var "location=Central India"
+      run: terraform apply
