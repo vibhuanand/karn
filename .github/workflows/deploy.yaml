@@ -29,7 +29,7 @@ permissions:
 
 defaults:
   run:
-    working-directory: ./tf
+    working-directory: ./tf/group1
 
 jobs:
   build-and-deploy:
