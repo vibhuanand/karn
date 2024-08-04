@@ -7,7 +7,7 @@ variable "environment" {
 variable "resource_group_name" {
   type        = string
   description = "(Requierd) Name of the resource group"
-  default     = "karn-rg-{{ var.environment }}"
+  default     = "karn-rg-${var.environment}"
 }
 
 variable "location" {
