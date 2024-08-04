@@ -4,11 +4,12 @@ resource "azurerm_resource_group" "rg" {
 }
 
 
-resource "azurerm_static_site" "static_site" {
-  name                = "karn-static-site-${var.environment}"
+resource "azurerm_static_web_app" "static_web_app" {
+  name                = "karn-static-webapp-{{ var.environment }}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  sku_tier            = "Standard"
+
+  sku_tier = "Free"
 
   identity {
     type = "SystemAssigned"
