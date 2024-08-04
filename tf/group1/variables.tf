@@ -6,7 +6,7 @@ variable "environment" {
 
 variable "resource_group_name" {
   type        = string
-  description = "(Requierd) Name of the resource group"
+  description = "Name of the resource group"
 }
 
 variable "location" {
