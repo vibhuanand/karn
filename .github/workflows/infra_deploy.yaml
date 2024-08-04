@@ -1,10 +1,52 @@
+name: Deploy Resource Groups to Azure
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'tf/group1/**' # Trigger only on changes to group1 files
+      - '.github/workflows/infra_deploy.yaml' # Trigger if this workflow file changes
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - 'tf/group1/**'
+      - '.github/workflows/infra_deploy.yaml'
+  workflow_dispatch:
+    inputs:
+      group:
+        description: 'Terraform group to deploy (group1)'
+        required: true
+        default: 'group1'
+        type: choice
+        options:
+          - group1
+      environment:
+        description: 'Environment to deploy to (sand/prod)'
+        required: true
+        default: 'sand'
+        type: choice
+        options:
+          - sand
+          - prod
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: ./tf/group1 # Ensure this matches where terraform.tfvars is located
+        working-directory: ./tf/group1
 
     steps:
     - name: Checkout code
@@ -24,6 +66,16 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         allow-no-subscriptions: true
+
+    - name: Check if Encrypted State File Exists
+      id: check_state
+      run: |
+        if [ -f terraform.tfstate.enc ]; then
+          echo "state_exists=true" >> $GITHUB_ENV
+        else
+          echo "state_exists=false" >> $GITHUB_ENV
+        fi
+      working-directory: ${{ env.WORKING_DIRECTORY }}
 
     - name: Decrypt Terraform State
       if: env.state_exists == 'true'
@@ -53,8 +105,8 @@ jobs:
     - name: Encrypt and Commit Terraform State
       run: |
         openssl enc -aes-256-cbc -salt -in terraform.tfstate -out terraform.tfstate.enc -pass file:./encryption_key.txt
-        git config --global user.email "your-email@example.com"
-        git config --global user.name "GitHub Actions"
+        git config --global user.email "your-email@vibhuanand@outlook.com"
+        git config --global user.name "vibhu-kr"
         git add terraform.tfstate.enc
         git commit -m "Update encrypted Terraform state" || echo "No changes to commit"
         git push
