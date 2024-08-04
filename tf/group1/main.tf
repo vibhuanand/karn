@@ -10,8 +10,4 @@ resource "azurerm_static_web_app" "static_web_app" {
   location            = azurerm_resource_group.rg.location
 
   sku_tier = "Free"
-
-  identity {
-    type = "SystemAssigned"
-  }
 }
