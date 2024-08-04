@@ -1,11 +1,11 @@
 resource "azurerm_resource_group" "rg" {
-  name     = "karn-rg-${var.environment}"
-  location = var.location
+  name     = "karn-rg-${local.environment}"
+  location = local.resource_group_name
 }
 
 
 resource "azurerm_static_web_app" "static_web_app" {
-  name                = "karn-static-webapp-${var.environment}"
+  name                = "karn-static-webapp-${local.environment}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
 
