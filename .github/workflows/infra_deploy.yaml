@@ -1,20 +1,27 @@
-name: Deploy Resource Group to Azure
+name: Deploy Resource Groups to Azure
 
 on:
   push:
     branches:
-      - '**' # Trigger on any push
+      - '**'
     paths:
-      - 'tf/**' # Trigger only on changes to Terraform files
+      - 'tf/group1/**' # Trigger only on changes to group1 files
       - '.github/workflows/infra_deploy.yaml' # Trigger if this workflow file changes
   pull_request:
     branches:
-      - '**' # Trigger on any pull request
+      - '**'
     paths:
-      - 'tf/**' # Trigger only on changes to Terraform files
-      - '.github/workflows/infra_deploy.yaml' # Trigger if this workflow file changes
+      - 'tf/group1/**'
+      - '.github/workflows/infra_deploy.yaml'
   workflow_dispatch:
     inputs:
+      group:
+        description: 'Terraform group to deploy (group1)'
+        required: true
+        default: 'group1'
+        type: choice
+        options:
+          - group1
       environment:
         description: 'Environment to deploy to (sand/prod)'
         required: true
@@ -33,18 +40,19 @@ permissions:
   contents: read
   pull-requests: write
 
-defaults:
-  run:
-    working-directory: ./tf/group1
-
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./tf/group1
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
-        ref: ${{ github.event.inputs.branch }}
+        ref: ${{ github.event.inputs.branch || github.ref }}
 
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v3
@@ -59,19 +67,49 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         allow-no-subscriptions: true
 
-    - name: Set environment variable for automatic runs
-      if: github.event_name != 'workflow_dispatch'
-      run: echo "ENVIRONMENT=sand" >> $GITHUB_ENV
+    - name: Check if Encrypted State File Exists
+      id: check_state
+      run: |
+        if [ -f terraform.tfstate.enc ]; then
+          echo "state_exists=true" >> $GITHUB_ENV
+        else
+          echo "state_exists=false" >> $GITHUB_ENV
+        fi
+      working-directory: ${{ env.WORKING_DIRECTORY }}
 
-    - name: Set environment variable for manual runs
-      if: github.event_name == 'workflow_dispatch'
-      run: echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+    - name: Decrypt Terraform State
+      if: env.state_exists == 'true'
+      run: |
+        echo "${{ secrets.ENCRYPTION_KEY }}" > encryption_key.txt
+        openssl enc -d -aes-256-cbc -in terraform.tfstate.enc -out terraform.tfstate -pass file:./encryption_key.txt
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+
+    - name: Initialize Empty Terraform State
+      if: env.state_exists == 'false'
+      run: |
+        echo "{}" > terraform.tfstate
+      working-directory: ${{ env.WORKING_DIRECTORY }}
 
     - name: Terraform Init
       run: terraform init
+      working-directory: ${{ env.WORKING_DIRECTORY }}
 
     - name: Terraform Plan
       run: terraform plan -var-file=terraform.tfvars
-      
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+
     - name: Terraform Apply
       run: terraform apply -auto-approve -var-file=terraform.tfvars
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+
+    - name: Encrypt and Commit Terraform State
+      run: |
+        openssl enc -aes-256-cbc -salt -in terraform.tfstate -out terraform.tfstate.enc -pass file:./encryption_key.txt
+        git config --global user.email "your-email@example.com"
+        git config --global user.name "GitHub Actions"
+        git add terraform.tfstate.enc
+        git commit -m "Update encrypted Terraform state" || echo "No changes to commit"
+        git push
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
