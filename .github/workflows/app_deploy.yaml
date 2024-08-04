@@ -7,20 +7,16 @@ on:
       - develop
       - feature/*
     paths:
-      - 'src/**'
-      - 'public/**'
-      - 'package.json'
-      - 'package-lock.json'
+      - 'app/**'
+      - '.github/workflows/app_deploy.yml'
   pull_request:
     branches:
       - main
       - develop
       - feature/*
     paths:
-      - 'src/**'
-      - 'public/**'
-      - 'package.json'
-      - 'package-lock.json'
+      - 'app/**'
+      - '.github/workflows/app_deploy.yml'
   workflow_dispatch:
     inputs:
       branch:
