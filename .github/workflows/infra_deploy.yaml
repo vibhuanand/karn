@@ -1,3 +1,38 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches:
+      - '**' # Trigger on any push to any branch
+    paths:
+      - 'tf/group1/**' # Trigger only on changes to Terraform files
+      - '.github/workflows/infra_deploy.yaml' # Trigger if this workflow file changes
+  pull_request:
+    branches:
+      - '**' # Trigger on any pull request
+    paths:
+      - 'tf/group1/**' # Trigger only on changes to Terraform files
+      - '.github/workflows/infra_deploy.yaml' # Trigger if this workflow file changes
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to (sand/prod)'
+        required: true
+        default: 'sand'
+        type: choice
+        options:
+          - sand
+          - prod
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
