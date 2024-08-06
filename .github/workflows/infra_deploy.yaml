@@ -39,7 +39,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./tf/group1
+        working-directory: ${{ github.workspace }}/tf/group1
 
     steps:
     - name: Checkout code
