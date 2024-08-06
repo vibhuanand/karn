@@ -57,6 +57,9 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         allow-no-subscriptions: true
 
+    - name: List files in the directory
+      run: ls -la ./tf/group1
+
     - name: Check if Encrypted State File Exists
       run: |
         if [ -f terraform.tfstate.enc ]; then
