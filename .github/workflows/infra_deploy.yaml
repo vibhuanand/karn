@@ -86,7 +86,7 @@ jobs:
     - name: Encrypt Terraform State
       run: |
         openssl enc -aes-256-cbc -salt -in terraform.tfstate -out terraform.tfstate.enc -pass file:encryption_key.txt
-        rm terraform.tfstate
+        rm terraform.tfstate  # Remove plain state file after encryption for security
 
     - name: Commit Encrypted Terraform State
       run: |
