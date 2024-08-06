@@ -25,6 +25,16 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         allow-no-subscriptions: true
 
+    - name: Check if Encrypted State File Exists
+      id: check_state
+      run: |
+        if [ -f terraform.tfstate.enc ]; then
+          echo "state_exists=true" >> $GITHUB_ENV
+        else
+          echo "state_exists=false" >> $GITHUB_ENV
+        fi
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+
     - name: Decrypt Terraform State
       if: env.state_exists == 'true'
       run: |
@@ -60,4 +70,4 @@ jobs:
         git push
       working-directory: ${{ env.WORKING_DIRECTORY }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
