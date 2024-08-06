@@ -6,12 +6,12 @@ on:
       - '**'  # Trigger on any push to any branch
     paths:
       - 'tf/group1/**'  # Trigger only on changes to Terraform files
-      - '.github/workflows/infra_deploy.yaml'  # Trigger if this workflow file changes
+      - '.github/workflows/infra_deploy.yaml'
   pull_request:
     branches:
-      - '**'  # Trigger on any pull request
+      - '**'
     paths:
-      - 'tf/group1/**'  # Trigger only on changes to Terraform files
+      - 'tf/group1/**'
       - '.github/workflows/infra_deploy.yaml'
   workflow_dispatch:
     inputs:
@@ -23,6 +23,10 @@ on:
         options:
           - sand
           - prod
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
 
 permissions:
   id-token: write
@@ -61,18 +65,16 @@ jobs:
           echo "state_exists=false" >> $GITHUB_ENV
         fi
 
+    - name: Create Encryption Key File
+      run: |
+        echo "${{ secrets.ENCRYPTION_KEY }}" > encryption_key.txt
+
     - name: Decrypt Terraform State
       if: env.state_exists == 'true'
       run: |
-        echo "${{ secrets.ENCRYPTION_KEY }}" > encryption_key.txt
         openssl enc -d -aes-256-cbc -in terraform.tfstate.enc -out terraform.tfstate -pass file:encryption_key.txt
 
-    - name: Initialize Empty Terraform State
-      if: env.state_exists == 'false'
-      run: |
-        echo "{}" > terraform.tfstate
-
-    - name: Terraform Init
+    - name: Initialize Terraform
       run: terraform init
 
     - name: Terraform Plan
@@ -84,7 +86,7 @@ jobs:
     - name: Encrypt Terraform State
       run: |
         openssl enc -aes-256-cbc -salt -in terraform.tfstate -out terraform.tfstate.enc -pass file:encryption_key.txt
-        rm terraform.tfstate  # Optional: Remove plain state file after encryption
+        rm terraform.tfstate
 
     - name: Commit Encrypted Terraform State
       run: |
