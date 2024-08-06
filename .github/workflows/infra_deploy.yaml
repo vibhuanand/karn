@@ -92,11 +92,9 @@ jobs:
 
     - name: Terraform Plan
       run: terraform plan
-      working-directory: ${{ env.WORKING_DIRECTORY }}
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
-      working-directory: ${{ env.WORKING_DIRECTORY }}
 
     - name: Encrypt and Commit Terraform State
       run: |
@@ -106,6 +104,5 @@ jobs:
         git add terraform.tfstate.enc
         git commit -m "Update encrypted Terraform state" || echo "No changes to commit"
         git push
-      working-directory: ${{ env.WORKING_DIRECTORY }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
