@@ -88,7 +88,6 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
-      working-directory: ${{ env.WORKING_DIRECTORY }}
 
     - name: Terraform Plan
       run: terraform plan
