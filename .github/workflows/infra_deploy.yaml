@@ -68,6 +68,7 @@ jobs:
           echo "::error ::Encrypted state file not found."  # This creates an error annotation in the GitHub Actions UI
         fi
 
+
     - name: Create Encryption Key File
       run: |
         echo "${{ secrets.ENCRYPTION_KEY }}" > encryption_key.txt
