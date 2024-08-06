@@ -3,7 +3,7 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 
-resource "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "rg-test" {
   name     = "karn-rg-${var.environment}-test"
   location = var.location
 }
