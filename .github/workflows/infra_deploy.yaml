@@ -4,7 +4,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./tf/group1 # Ensure this is correct
+        working-directory: ./tf/group1
 
     steps:
     - name: Checkout code
@@ -53,11 +53,11 @@ jobs:
     - name: Encrypt and Commit Terraform State
       run: |
         openssl enc -aes-256-cbc -salt -in terraform.tfstate -out terraform.tfstate.enc -pass file:./encryption_key.txt
-        git config --global user.email "your-email@example.com"
+        git config --global user.email "vibhuanand@outlook.com"
         git config --global user.name "GitHub Actions"
         git add terraform.tfstate.enc
         git commit -m "Update encrypted Terraform state" || echo "No changes to commit"
         git push
       working-directory: ${{ env.WORKING_DIRECTORY }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
