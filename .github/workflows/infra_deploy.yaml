@@ -61,8 +61,11 @@ jobs:
       run: |
         if [ -f terraform.tfstate.enc ]; then
           echo "state_exists=true" >> $GITHUB_ENV
+          echo "Encrypted state file found."
         else
           echo "state_exists=false" >> $GITHUB_ENV
+          echo "Encrypted state file not found."
+          echo "::error ::Encrypted state file not found."  # This creates an error annotation in the GitHub Actions UI
         fi
 
     - name: Create Encryption Key File
