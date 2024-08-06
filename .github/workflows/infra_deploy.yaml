@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ github.workspace }}/tf/group1
+        working-directory: ./tf/group1
 
     steps:
     - name: Checkout code
@@ -73,6 +73,12 @@ jobs:
       if: env.state_exists == 'true'
       run: |
         openssl enc -d -aes-256-cbc -in terraform.tfstate.enc -out terraform.tfstate -pass file:encryption_key.txt
+
+    - name: Show Decrypted Terraform State File
+      if: env.state_exists == 'true'
+      run: |
+        echo "Decrypted Terraform State:"
+        cat terraform.tfstate
 
     - name: Initialize Terraform
       run: terraform init
