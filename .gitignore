@@ -1,23 +1,23 @@
-
-
-# .tfstate files
+# Ignore Terraform state files
 *.tfstate
 *.tfstate.*
 
-# Crash log files
+# Ignore crash log files
 crash.log
 
-# Exclude all .tfvars files, which might contain sensitive data, such as
-# passwords, private keys, and other secrets.
+# Exclude sensitive variables files
 *.tfvars
 *.tfvars.json
 
-# Ignore override files as they are usually used to override resources locally.
+# Ignore override files typically used for local customization
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
 
-# Ignore CLI configuration files
+# Ignore Terraform CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore the directory containing provider binaries
+**/.terraform/*
