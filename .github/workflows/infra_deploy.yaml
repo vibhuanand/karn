@@ -3,16 +3,16 @@ name: Deploy to Azure
 on:
   push:
     branches:
-      - '**' # Trigger on any push to any branch
+      - '**'  # Trigger on any push to any branch
     paths:
-      - 'tf/group1/**' # Trigger only on changes to Terraform files
-      - '.github/workflows/infra_deploy.yaml' # Trigger if this workflow file changes
+      - 'tf/group1/**'  # Trigger only on changes to Terraform files
+      - '.github/workflows/infra_deploy.yaml'  # Trigger if this workflow file changes
   pull_request:
     branches:
-      - '**' # Trigger on any pull request
+      - '**'  # Trigger on any pull request
     paths:
-      - 'tf/group1/**' # Trigger only on changes to Terraform files
-      - '.github/workflows/infra_deploy.yaml' # Trigger if this workflow file changes
+      - 'tf/group1/**'  # Trigger only on changes to Terraform files
+      - '.github/workflows/infra_deploy.yaml'
   workflow_dispatch:
     inputs:
       environment:
@@ -36,7 +36,6 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: ${{ github.workspace }}/tf/group1
@@ -61,27 +60,26 @@ jobs:
         allow-no-subscriptions: true
 
     - name: Check if Encrypted State File Exists
-      id: check_state
       run: |
         if [ -f terraform.tfstate.enc ]; then
           echo "state_exists=true" >> $GITHUB_ENV
         else
           echo "state_exists=false" >> $GITHUB_ENV
         fi
-      working-directory: ${{ env.WORKING_DIRECTORY }}
+
+    - name: Create Encryption Key File
+      run: |
+        echo "${{ secrets.ENCRYPTION_KEY }}" > encryption_key.txt
 
     - name: Decrypt Terraform State
       if: env.state_exists == 'true'
       run: |
-        echo "${{ secrets.ENCRYPTION_KEY }}" > encryption_key.txt
-        openssl enc -d -aes-256-cbc -in terraform.tfstate.enc -out terraform.tfstate -pass file:./encryption_key.txt
-      working-directory: ${{ env.WORKING_DIRECTORY }}
+        openssl enc -d -aes-256-cbc -in terraform.tfstate.enc -out terraform.tfstate -pass file:encryption_key.txt
 
     - name: Initialize Empty Terraform State
       if: env.state_exists == 'false'
       run: |
         echo "{}" > terraform.tfstate
-      working-directory: ${{ env.WORKING_DIRECTORY }}
 
     - name: List files in working directory
       run: ls -la
@@ -97,7 +95,7 @@ jobs:
 
     - name: Encrypt and Commit Terraform State
       run: |
-        openssl enc -aes-256-cbc -salt -in terraform.tfstate -out terraform.tfstate.enc -pass file:./encryption_key.txt
+        openssl enc -aes-256-cbc -salt -in terraform.tfstate -out terraform.tfstate.enc -pass file:encryption_key.txt
         git config --global user.email "vibhuanand@outlook.com"
         git config --global user.name "GitHub Actions"
         git add terraform.tfstate.enc
