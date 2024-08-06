@@ -23,10 +23,6 @@ on:
         options:
           - sand
           - prod
-      branch:
-        description: 'Branch to deploy'
-        required: true
-        default: 'main'
 
 permissions:
   id-token: write
@@ -43,8 +39,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-      with:
-        ref: ${{ github.event.inputs.branch || github.ref }}
 
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v3
@@ -67,22 +61,16 @@ jobs:
           echo "state_exists=false" >> $GITHUB_ENV
         fi
 
-    - name: Create Encryption Key File
-      run: |
-        echo "${{ secrets.ENCRYPTION_KEY }}" > encryption_key.txt
-
     - name: Decrypt Terraform State
       if: env.state_exists == 'true'
       run: |
+        echo "${{ secrets.ENCRYPTION_KEY }}" > encryption_key.txt
         openssl enc -d -aes-256-cbc -in terraform.tfstate.enc -out terraform.tfstate -pass file:encryption_key.txt
 
     - name: Initialize Empty Terraform State
       if: env.state_exists == 'false'
       run: |
         echo "{}" > terraform.tfstate
-
-    - name: List files in working directory
-      run: ls -la
 
     - name: Terraform Init
       run: terraform init
@@ -93,9 +81,13 @@ jobs:
     - name: Terraform Apply
       run: terraform apply -auto-approve
 
-    - name: Encrypt and Commit Terraform State
+    - name: Encrypt Terraform State
       run: |
         openssl enc -aes-256-cbc -salt -in terraform.tfstate -out terraform.tfstate.enc -pass file:encryption_key.txt
+        rm terraform.tfstate  # Optional: Remove plain state file after encryption
+
+    - name: Commit Encrypted Terraform State
+      run: |
         git config --global user.email "vibhuanand@outlook.com"
         git config --global user.name "GitHub Actions"
         git add terraform.tfstate.enc
