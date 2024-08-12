@@ -11,18 +11,18 @@ function App() {
       <div>
         <nav>
           <ul>
-            <li><Link to="/add">Add</Link></li>
-            <li><Link to="/estimate">Estimate</Link></li>
-            <li><Link to="/subtract">Subtract</Link></li>
-            <li><Link to="/summary">Summary</Link></li>
+            <li><Link to="/Add">Add</Link></li>
+            <li><Link to="/Estimate">Estimate</Link></li>
+            <li><Link to="/Subtract">Subtract</Link></li>
+            <li><Link to="/Summary">Summary</Link></li>
           </ul>
         </nav>
         <div className="content">
           <Switch>
-            <Route path="/add" component={Add} />
-            <Route path="/estimate" component={Estimate} />
-            <Route path="/subtract" component={Subtract} />
-            <Route path="/summary" component={Summary} />
+            <Route path="/Add" component={Add} />
+            <Route path="/Estimate" component={Estimate} />
+            <Route path="/Subtract" component={Subtract} />
+            <Route path="/Summary" component={Summary} />
             <Route path="/" exact component={Add} />
           </Switch>
         </div>
