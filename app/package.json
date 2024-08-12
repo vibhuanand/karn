@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
       "start": "react-scripts start",
-      "build": "next build && next export",
+      "build": "react build && react export",
       "eject": "react-scripts eject"
     },
     "author": "Vibhu Anand",
