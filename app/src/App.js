@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import Add from './components/Add';
 import Estimate from './components/Estimate';
 import Subtract from './components/Subtract';
-import Summary from './components/Summary';
+import Summary from './components/summary';
 
 function App() {
   return (
