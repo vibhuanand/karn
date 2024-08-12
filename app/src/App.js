@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Add from './components/Add';
 import Estimate from './components/Estimate';
 import Subtract from './components/Subtract';
@@ -18,13 +18,13 @@ function App() {
           </ul>
         </nav>
         <div className="content">
-          <Switch>
-            <Route path="/Add" component={Add} />
-            <Route path="/Estimate" component={Estimate} />
-            <Route path="/Subtract" component={Subtract} />
-            {/* <Route path="/Summary" component={Summary} /> */}
-            <Route path="/" exact component={Add} />
-          </Switch>
+          <Routes>
+            <Route path="/Add" element={<Add />} />
+            <Route path="/Estimate" element={<Estimate />} />
+            <Route path="/Subtract" element={<Subtract />} />
+            {/* <Route path="/Summary" element={<Summary />} /> */}
+            <Route path="/" element={<Add />} />
+          </Routes>
         </div>
       </div>
     </Router>
