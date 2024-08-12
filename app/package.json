@@ -1,17 +1,40 @@
 {
     "name": "karn",
     "version": "0.0.1",
-    "description": "Revolutio for small business",
+    "description": "Revolution for small business",
     "main": "index.js",
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "start": "node index.js",
-      "build": "echo \"Building app\""
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject"
     },
-    "author": "Your Name",
+    "author": "Vibhu Anand",
     "license": "ISC",
     "dependencies": {
-      "express": "^4.17.1"
+      "express": "^4.17.1",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-scripts": "5.0.1"
+    },
+    "devDependencies": {},
+    "eslintConfig": {
+      "extends": [
+        "react-app",
+        "react-app/jest"
+      ]
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
     }
   }
   
