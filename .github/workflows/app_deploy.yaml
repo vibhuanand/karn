@@ -6,24 +6,6 @@ on:
       - main
       - develop
       - feature/*
-    paths:
-      - 'app/**'
-      - '.github/workflows/app_deploy.yml'
-  pull_request:
-    branches:
-      - main
-      - develop
-      - feature/*
-    paths:
-      - 'app/**'
-      - '.github/workflows/app_deploy.yml'
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to deploy'
-        required: true
-        default: 'main'
-        type: string
 
 permissions:
   id-token: write
@@ -33,15 +15,11 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./app
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
-        ref: ${{ github.event.inputs.branch || github.ref }}
+        ref: ${{ github.event.pull_request.head_repo.full_name }} # Use PR head repo for PR events
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
@@ -52,11 +30,7 @@ jobs:
       run: npm install
 
     - name: Build project
-      run: npm run build --prefix . || (cat npm-debug.log && exit 1)
-      working-directory: .
-
-    - name: List build directory
-      run: ls -la ./build
+      run: npm run build || (cat npm-debug.log && exit 1)
 
     - name: Deploy to Azure Static Web Apps
       uses: Azure/static-web-apps-deploy@v1
@@ -64,6 +38,6 @@ jobs:
         azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
         repo_token: ${{ secrets.GH_TOKEN }}
         action: 'upload'
-        app_location: '.' # Adjusted to current working directory
+        app_location: '/' # Root of your project
         api_location: '' # Leave empty if you don't have an API
-        output_location: './build' # Corrected path to match the actual build directory
+        output_location: 'build' # The directory from which to deploy
