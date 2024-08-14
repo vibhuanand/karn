@@ -53,6 +53,7 @@ jobs:
 
     - name: Build project
       run: npm run build --prefix . || (cat npm-debug.log && exit 1)
+      working-directory: .
 
     - name: List build directory
       run: ls -la ./build
