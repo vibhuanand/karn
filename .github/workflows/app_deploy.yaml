@@ -3,9 +3,10 @@ name: Deploy Application
 on:
   push:
     branches:
-      - main
-      - develop
-      - feature/*
+      - '**'  # This will trigger the workflow on any branch push
+  pull_request:
+    branches:
+      - '**'  # This will trigger the workflow on any pull request to any branch
 
 permissions:
   id-token: write
@@ -18,8 +19,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-      with:
-        ref: ${{ github.event.pull_request.head_repo.full_name }} # Use PR head repo for PR events
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
