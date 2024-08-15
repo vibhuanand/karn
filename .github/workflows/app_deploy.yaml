@@ -3,10 +3,17 @@ name: Deploy Application
 on:
   push:
     branches:
-      - '**'  # This will trigger the workflow on any branch push
+      - '**'
+    paths-ignore:
+      - 'tf/**'
+
   pull_request:
     branches:
-      - '**'  # This will trigger the workflow on any pull request to any branch
+      - '**'
+    paths-ignore:
+      - 'tf/**' 
+
+  workflow_dispatch:
 
 permissions:
   id-token: write
