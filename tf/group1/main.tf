@@ -32,7 +32,7 @@ resource "azurerm_app_service_plan" "app_service_plan" {
 }
 
 # Azure Function App
-resource "azurerm_function_app" "example" {
+resource "azurerm_function_app" "add-function-app" {
   name                       = "add-function-app-${var.environment}"
   location                   = azurerm_resource_group.rg.location
   resource_group_name        = azurerm_resource_group.rg.name
