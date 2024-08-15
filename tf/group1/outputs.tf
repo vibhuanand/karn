@@ -6,22 +6,26 @@ output "static_web_app_default_host_name" {
   value = azurerm_static_web_app.static_web_app.default_host_name
 }
 
-output "sql_server_name" {
-  value = azurerm_sql_server.sql_server.name
-}
+# Output the Fully Qualified Domain Name (FQDN) of the SQL Server
+# output "sql_server_fqdn" {
+#   description = "The fully qualified domain name of the Azure SQL Server"
+#   value       = azurerm_sql_server.sql_server.fully_qualified_domain_name
+# }
 
-output "sql_database_name" {
-  value = azurerm_sql_database.sql_db.name
-}
+# # Output the ID of the SQL Server
+# output "sql_server_id" {
+#   description = "The ID of the Azure SQL Server"
+#   value       = azurerm_sql_server.sql_server.id
+# }
 
-output "sql_admin_username" {
-  value = azurerm_sql_server.sql_server.administrator_login
-}
+# # Output a list of dropped restorable database IDs on the server
+# output "restorable_dropped_database_ids" {
+#   description = "A list of dropped restorable database IDs on the SQL Server"
+#   value       = azurerm_sql_server.sql_server.restorable_dropped_database_ids
+# }
 
-output "sql_admin_password" {
-  value = azurerm_sql_server.sql_server.administrator_login_password
-}
-
-output "sql_connection_string" {
-  value = "Server=tcp:${azurerm_sql_server.sql_server.name}.database.windows.net,1433;Initial Catalog=${azurerm_sql_database.sql_db.name};Persist Security Info=False;User ID=${azurerm_sql_server.sql_server.administrator_login};Password=${azurerm_sql_server.sql_server.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-}
+# # Output the name of the SQL Database
+# output "sql_database_name" {
+#   description = "The name of the Azure SQL Database"
+#   value       = azurerm_sql_database.sql_database.name
+# }
