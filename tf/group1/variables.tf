@@ -3,17 +3,22 @@
 variable "environment" {
   type        = string
   description = "(Required) Environment for the resource group"
-  default = "sand"
+  default     = "sand"
 }
 
 variable "resource_group_name" {
   type        = string
   description = "(Required) Name of the resource group"
-  default = "karn-static-webapp-sand"
+  default     = "karn-static-webapp-sand"
 }
 
 variable "location" {
   type        = string
   description = "(Required) Location of the resources"
-  default = "eastasia"
+  default     = "eastasia"
+}
+
+variable "sql_admin_password" {
+  type        = string
+  description = "The SQL Server administrator password"
 }
