@@ -3,7 +3,8 @@ name: Deploy Application
 on:
   push:
     branches:
-      - '**'  # This will trigger the workflow on any branch push
+      - './app'
+      - '.github/workflows/app_deploy.yaml'
   pull_request:
     branches:
       - '**'  # This will trigger the workflow on any pull request to any branch
