@@ -1,17 +1,17 @@
 name: Deploy Application
 
 on:
-  push:
-    branches:
-      - '**'
-    paths-ignore:
-      - 'tf/**'
+  # push:
+  #   branches:
+  #     - '**'
+  #   paths-ignore:
+  #     - 'tf/**'
 
-  pull_request:
-    branches:
-      - '**'
-    paths-ignore:
-      - 'tf/**' 
+  # pull_request:
+  #   branches:
+  #     - '**'
+  #   paths-ignore:
+  #     - 'tf/**' 
 
   workflow_dispatch:
 
