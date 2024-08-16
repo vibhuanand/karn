@@ -47,176 +47,21 @@
             margin-top: 50px;
             font-size: 36px;
         }
-
-        .table-container {
-            margin-top: 20px;
-            color: white;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid white;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-
-        .btn-submit {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .btn-submit:hover {
-            background-color: #45a049;
-        }
     </style>
 </head>
 <body>
+
     <div class="navbar">
-        <a href="#" class="active" id="addLink">Add</a>
-        <a href="#" id="subtractLink">Subtract</a>
-        <a href="#" id="invoiceLink">Invoice</a>
+        <a href="#add" class="active">Add</a>
+        <a href="#subtract">Subtract</a>
+        <a href="#invoice">Invoice</a>
     </div>
 
     <div class="content">
-        <h1 class="title">Shudh Estimate</h1>
         <div id="root"></div>
     </div>
 
-    <script type="text/babel">
-        class App extends React.Component {
-            constructor(props) {
-                super(props);
-                this.state = {
-                    selectedTab: "add",
-                    showNewItemTable: false,
-                    items: Array(20).fill({
-                        productName: "",
-                        startingInventory: "",
-                        newInventory: "",
-                        sellingPrice: "",
-                        price5: "",
-                        price10: "",
-                        price15: "",
-                        price20: "",
-                        price25: "",
-                        price40: "",
-                        price50: "",
-                        basePack: ""
-                    })
-                };
-            }
+    <script src="index.js"></script>
 
-            handleTabChange = (tab) => {
-                this.setState({ selectedTab: tab });
-            };
-
-            handleNewItemClick = () => {
-                this.setState({ showNewItemTable: true });
-            };
-
-            handleInputChange = (index, event) => {
-                const newItems = [...this.state.items];
-                newItems[index][event.target.name] = event.target.value;
-                this.setState({ items: newItems });
-            };
-
-            handleSubmit = () => {
-                // Simulate saving to SQL database
-                console.log("Saving to database:", this.state.items);
-                alert("Items saved to the database.");
-            };
-
-            renderNewItemTable = () => {
-                if (!this.state.showNewItemTable) return null;
-
-                return (
-                    <div className="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Product Name</th>
-                                    <th>Starting Inventory</th>
-                                    <th>New Inventory</th>
-                                    <th>Selling Price - 1 unit</th>
-                                    <th>Price 5+ units</th>
-                                    <th>Price 10+ units</th>
-                                    <th>Price 15+ units</th>
-                                    <th>Price 20+ units</th>
-                                    <th>Price 25+ units</th>
-                                    <th>Price 40+ units</th>
-                                    <th>Price 50+ units</th>
-                                    <th>Base Pack</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.state.items.map((item, index) => (
-                                    <tr key={index}>
-                                        <td><input name="productName" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                        <td><input name="startingInventory" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                        <td><input name="newInventory" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                        <td><input name="sellingPrice" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                        <td><input name="price5" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                        <td><input name="price10" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                        <td><input name="price15" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                        <td><input name="price20" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                        <td><input name="price25" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                        <td><input name="price40" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                        <td><input name="price50" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                        <td><input name="basePack" onChange={(e) => this.handleInputChange(index, e)} /></td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        <button className="btn-submit" onClick={this.handleSubmit}>Save Items to Database</button>
-                    </div>
-                );
-            };
-
-            render() {
-                return (
-                    <div>
-                        {this.state.selectedTab === "add" && (
-                            <div>
-                                <button onClick={this.handleNewItemClick}>New Item</button>
-                                {this.renderNewItemTable()}
-                            </div>
-                        )}
-                        {/* Additional logic for Subtract and Invoice can be added similarly */}
-                    </div>
-                );
-            }
-        }
-
-        ReactDOM.render(<App />, document.getElementById('root'));
-
-        document.getElementById('addLink').addEventListener('click', () => {
-            document.getElementById('root').style.display = 'block';
-        });
-
-        document.getElementById('subtractLink').addEventListener('click', () => {
-            alert("Subtract Tab Clicked");
-        });
-
-        document.getElementById('invoiceLink').addEventListener('click', () => {
-            alert("Invoice Tab Clicked");
-        });
-    </script>
-
-    <!-- Load React and ReactDOM via CDN -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 </body>
 </html>
